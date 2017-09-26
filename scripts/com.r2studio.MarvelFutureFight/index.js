@@ -99,7 +99,6 @@ function MarvelFutureFight() {
 }
 
 MarvelFutureFight.prototype.goBack = function() {
-  log("goBack")
   keycode('BACK', this.Const.during);
 }
 
@@ -128,18 +127,21 @@ MarvelFutureFight.prototype.isGameReadyScreen = function(img) {
 MarvelFutureFight.prototype.checkButton = function() {
   var img = this.screenshot();
   if (Config.autoNextWar && isSameColor(this.Const.ButtonEnableColor, getColor(img, this.Const.ButtonNextWar))) {
-    log("下一關(藍色按鈕)");
+    log("打下一關(藍色按鈕)");
     this.tap(this.Const.ButtonNextWar);
     this.pressSkipButton(img);
+    sleep(5000);
   }
   if ((Config.autoNextWar || Config.autoSameWar) && this.isGameReadyScreen(img)) {
-    log("下一關(綠色按鈕)");
+    log("開始(綠色按鈕)");
     this.tap(this.Const.ButtonNextWarGreen);
     this.pressSkipButton(img);
+    sleep(5000);
   }
   if (Config.autoSameWar && isSameColor(this.Const.ButtonEnableColor, getColor(img, this.Const.ButtonSameWar))) {
-    log("重打同一關");
+    log("打同一關");
     this.tap(this.Const.ButtonSameWar);
+    sleep(5000);
   }
 
   this.pressSkipButton(img);
@@ -186,7 +188,7 @@ MarvelFutureFight.prototype.taskAttack = function() {
     return;
   }
   log('普通攻擊');
-  this.tap(this.Const.ButtonAttack);
+  this.tap(this.Const.ButtonAttack, 1000);
 }
 
 MarvelFutureFight.prototype.taskPowerAttack = function() {
