@@ -32,6 +32,18 @@ function log() {
 
 // ============================TSUM=============================== //
 
+var Scores = {
+  block_sulley_s: -0.02,
+  block_maleficentd_s: 0.04,
+  block_arlo_s: 0.05,
+  block_pascal_s: 0.02,
+  block_deathtrooper_s: 0.03,
+  block_kyloren_s_0: 0.05,
+  block_k2so_s: 0.02,
+  block_lotso_s: 0.05,
+  block_vader_s: 0.03,
+}
+
 var Config = {
   tsumCount: 5,
   tsumDir: 'scripts/com.r2studio.Tsum/tsums_12',
@@ -126,14 +138,12 @@ function findAllTsumMatchScore(tsumImages, boardImg, myTsum) {
     var xyScore = findImage(boardImg, tsumImage);
     xyScore.img = tsumImage; 
     xyScore.key = k;
+    if (xyScore.isAdjScore == undefined && Scores[k] != undefined) {
+      xyScore.score += Scores[k];
+      xyScore.isAdjScore = true;
+    }
     if (k == myTsum) {
       xyScore.score = 1;
-    }
-    if (k == 'block_sulley_s') {
-      xyScore.score -= 0.02;
-    }
-    if (k == 'block_arlo_s') {
-      xyScore.score += 0.03;
     }
     tsumMaxScores.push(xyScore);
   }
@@ -652,7 +662,7 @@ Tsum.prototype.taskPlayGame = function() {
       saveImage(gameImage, getStoragePath() + "/tmp/boardImg-" + runTimes + ".jpg");
     }
     releaseImage(gameImage);
-
+    
     log('計算連線路徑');
     var paths = calculatePaths(board);
     
@@ -677,9 +687,9 @@ Tsum.prototype.taskPlayGame = function() {
     log('開始連線 數量', paths.length);
     this.link(paths);
 
-    if (runTimes % 5 == 4) {
-      this.tap(Button.gameRand, 100);
-      this.tap(Button.gameRand, 100);
+    if (runTimes % 3 == 2) {
+      this.tap(Button.gameRand, 60);
+      this.tap(Button.gameRand, 60);
       sleep(700);
     }
     sleep(300);
@@ -692,7 +702,7 @@ Tsum.prototype.taskPlayGame = function() {
       this.useSkill(); 
     }
 
-    var page = this.checkPage(3500);
+    var page = this.checkPage(3000);
     if (page != 'playingGame' && page != 'pausingGame') {
       log('遊戲結束');
       break;
@@ -788,5 +798,5 @@ function stop() {
 // ts = new Tsum();
 // ts.taskPlayGame();
 // ts.goFriendPage();
-// start(true, false, false, true);
+start(true, true, false);
 // stop();
